@@ -449,11 +449,11 @@ func (l Location) RunCron() error {
 	next := schedule.Next(last)
 	now := time.Now()
 	if now.After(next) {
-		lock.SetCron(l.name, now.Unix())
 		errs := l.Backup(true, false, "")
 		if len(errs) > 0 {
 			return fmt.Errorf("Failed to backup location \"%s\":\n%w", l.name, errors.Join(errs...))
 		}
+		lock.SetCron(l.name, now.Unix())
 	} else {
 		if !flags.CRON_LEAN {
 			colors.Body.Printf("Skipping \"%s\", not due yet.\n", l.name)
